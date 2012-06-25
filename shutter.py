@@ -15,11 +15,20 @@ def main():
 
     rawfile = sys.argv[1]
 
+    print "Camera Model: ", decode_model(rawfile)
     print "Total shutter counts: ", canon_20D(rawfile)
+
+
+def decode_model(rawfile):
+    with open(rawfile, "rb") as ifh:
+        # This appears Canon 20D only
+        ifh.seek(0xCA)
+        bytes = ifh.read(14)
+        return bytes
 
 def canon_20D(rawfile):
     with open(rawfile, "rb") as ifh:
-        ifh.seek(0x95d)
+        ifh.seek(0x95D)
         bytes = ifh.read(2)
         ## assuming this is unsigned int ( 2 bytes)
         ## @ for native byte order, < little endian, > for big endian
